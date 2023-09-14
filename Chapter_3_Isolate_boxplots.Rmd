@@ -1,0 +1,117 @@
+---
+title: "Proteome_secretome_2"
+author: "mram222"
+date: "2023-08-14"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+#Read in data frame
+df <- read.csv("Secretome_Proteome.csv")
+#install packages
+library(ggplot2)
+library(tidyr)
+```
+
+#Code for Chapter 3, Figure 3.5
+M.ALGERIENSE PROTEOME + SECRETOME
+```{r}
+#edit dataframe
+rows_remove <- c(2,4,5,30,43,44:57)
+df_isolates <- df[-rows_remove, ]
+
+## for: ASPARTIC ACID  ##
+#transform data
+data_long <- pivot_longer(df_isolates, cols = c(Proteome_Aspartic_acid, Secretome_Aspartic_acid),names_to = "Variable", values_to = "Value")
+
+#plot code
+scatter_plot <- ggplot(data_long, aes(x = Name, y = Value, color = Variable)) +
+  geom_jitter(width = 0.5, alpha = 0.7) +
+  labs(x = "M. algeriense: Aspartic acid composition", y = "Aspartic Acid %") +
+  theme_minimal() +
+  scale_color_manual(values = c("Proteome_Aspartic_acid" = "blue", "Secretome_Aspartic_acid" = "forestgreen"), labels = c("Proteome_Aspartic_acid" = "Proteome", "Secretome_Aspartic_acid" = "Secretome")) 
+
+
+## for: GLUTAMIC ACID  ##
+#transform data
+data_long_glu <- pivot_longer(df_isolates, cols = c(Proteome_Glutamic_acid, Secretome_Glutamic_acid),names_to = "Variable_glu", values_to = "Value_glu")
+
+#plot code
+scatter_plot_glu <- ggplot(data_long_glu, aes(x = Name, y = Value_glu, color = Variable_glu)) +
+  geom_jitter(width = 0.5, alpha=0.7) +
+  labs(x = "M. algeriense: Glutamic acid composition", y = "Glutamic Acid %") +
+  theme_minimal() +
+  scale_color_manual(values = c("Proteome_Glutamic_acid" = "blue", "Secretome_Glutamic_acid" = "forestgreen")) + theme(legend.position="none")
+
+#collate plots for final plot image
+combined_1 <- scatter_plot_glu + scatter_plot 
+combined_1 + plot_layout(guides = "collect", ncol=2)
+
+```
+
+#Code for Chapter 3, Figure 3.6
+FRESHWATER + SALINE M.ALGERIENSE PROTEOME + SECRETOME
+```{r}
+#read in data file
+df_cat <- read.csv("Secretome_proteome_cat.csv")
+#edit data frame
+rows_remove <- c(2,4,5,30,43,44:57)
+df_cat_2 <- df_cat[-rows_remove, ]
+
+## for: aspartic acid in the proteome ##
+#plot code
+iso_asp_p <- ggplot(df_cat_2, aes(x=Name, y = Proteome_Aspartic_acid)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(aes(color = Genome_cat), width = 0.3, alpha = 0.7, size = 1) +
+  theme_minimal() +
+  labs(x = "M. algeriense isolates: Proteome",
+       y = "Aspartatic acid %")
+
+iso_asp_p <- iso_asp_p + theme(legend.position="none") #remove legend
+
+## for: aspartic acid in the secretome ##
+#plot code
+iso_asp_s <- ggplot(df_cat_2, aes(x=Name, y = Secretome_Aspartic_acid)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(aes(color = Genome_cat), width = 0.3, alpha = 0.7, size = 1) +
+  theme_minimal() +
+  labs(x = "M. algeriense isolates: Secretome",
+       y = "Aspartatic acid %") 
+
+iso_asp_s <- iso_asp_s + theme(legend.position="none") #remove legend
+
+## for: glutumatic acid in the proteome ##
+#plot code
+iso_glu_p <- ggplot(df_cat_2, aes(x=Name, y = Proteome_Glutamic_acid)) +
+  geom_boxplot(outlier.shape = NA) + 
+  geom_jitter(aes(color = Genome_cat), width = 0.3, alpha = 0.7, size = 1) +
+  theme_minimal() + 
+  labs(x = "M. algeriense isolates: Proteome",
+       y = "Glutamic acid %") + 
+  guides(color=guide_legend(title=NULL))
+
+iso_glu_p <- iso_glu_p + theme(legend.position="none")
+
+## for glutamic acid in the secretome ##
+#plot code
+iso_glu_s <- ggplot(df_cat_2, aes(x=Name, y = Secretome_Glutamic_acid)) +
+  geom_boxplot(outlier.shape = NA) + #to make sure all outliers are plotted 
+  geom_jitter(aes(color = Genome_cat), width = 0.3, alpha = 0.7, size = 1) +
+  theme_minimal() +
+  labs(x = "M. algeriense isolates: Secretome",
+       y = "Glutamic acid %") 
+
+
+#collate plots to make final figures
+library(patchwork)
+
+combined <- iso_glu_p + iso_glu_s + iso_asp_p + iso_asp_s & theme(legend.title = element_blank(),legend.position = "bottom", legend.text = element_text(size=10) )
+
+combined + plot_layout(guides = "collect", ncol=2)
+
+```
+

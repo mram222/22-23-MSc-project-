@@ -1,0 +1,146 @@
+---
+title: "freshwater_halophile_ref_figures"
+author: "mram222"
+date: "2023-08-24"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+#packages
+library(ggplot2)
+library(patchwork)
+library(dplyr)
+```
+
+#Plots for Chapter 3, Figure 3.2.
+(ASPARTIC ACID)
+
+```{r}
+#ASPARTIC ACID
+#read in data file
+reference_aa <- read.csv("AA_comp_all/halophile_freshwater_refs_overall_aa_comp/halophile_freshwater_AAcomp_glu_asp-overall.csv") 
+
+#filter data
+filtered_data_fresh <- reference_aa %>% filter(Genome_type == "Freshwater_reference")
+filtered_data_halo <- reference_aa %>% filter(Genome_type == "Halophile_reference")
+
+#plot code
+asp_fresh_proteome <- ggplot(filtered_data_fresh, aes(x = Genome_type, y = Aspartic_acid)) +
+  geom_boxplot() +
+  geom_point(aes(color = Genome_ID), size=1.5, show.legend = FALSE) +
+  geom_text(aes(label = Genome_ID, color = Genome_ID),size = 3, show.legend = FALSE) +
+  scale_color_manual(values = c("Aquiluna borgonia" = "darkred", "Cloacibacterium rupense" = "blue", "Flavobacterium dankookense" = "azure4", "Limnohabitans planktonicus" = "darkgoldenrod2", "Rhodoluna lacicola" = "darkorange1", "Sandarakinorhabdus limnophila DSM_17366" = "darkmagenta", "Silvanigrella aquatica" = "cornflowerblue")) +
+  theme_minimal() +
+  xlab("Freshwater reference genomes") +
+  ylab("Proteomic Aspartic Acid %")
+
+asp_halo_proteome <- ggplot(filtered_data_halo, aes(x = Genome_type, y = Aspartic_acid)) +
+  geom_boxplot() +
+  geom_point(aes(color = Genome_ID), size=1.5, show.legend = FALSE) +
+  geom_text(aes(label = Genome_ID, color = Genome_ID),size = 3, show.legend = FALSE) +
+  scale_color_manual(values = c("Halobellus limi" = "coral", "Halobellus salinus" = "darkgoldenrod4", "Limimonas halophila" = "darkolivegreen3", "Piscibacillus salipiscarius JCM_13188" = "aquamarine3", "Salinibacter altiplanensist" = "violet", "Salinibacter ruber DSM_13855" = "cyan3", "Salinicola salarius" = "deeppink")) +
+  theme_minimal() +
+  xlab("Halophile reference genomes") +
+  ylab("Proteomic Aspartic Acid %")
+```
+
+#Plots for Chapter 3, Figure 3.2.
+(GLUTAMIC ACID)
+
+```{r}
+glu_fresh_proteome <- ggplot(filtered_data_fresh, aes(x = Genome_type, y = Glutamic_acid)) +
+  geom_boxplot() +
+  geom_point(aes(color = Genome_ID), size=1.5, show.legend = FALSE) +
+  geom_text(aes(label = Genome_ID, color = Genome_ID),size = 3, show.legend = FALSE) +
+  scale_color_manual(values = c("Aquiluna borgonia" = "darkred", "Cloacibacterium rupense" = "blue", "Flavobacterium dankookense" = "azure4", "Limnohabitans planktonicus" = "darkgoldenrod2", "Rhodoluna lacicola" = "darkorange1", "Sandarakinorhabdus limnophila DSM_17366" = "darkmagenta", "Silvanigrella aquatica" = "cornflowerblue")) +
+  theme_minimal() +
+  xlab("Freshwater reference genomes") +
+  ylab("Proteomic Glutamic Acid %")
+
+glu_halo_proteome <- ggplot(filtered_data_halo, aes(x = Genome_type, y = Glutamic_acid)) +
+  geom_boxplot() +
+  geom_point(aes(color = Genome_ID), size=1.5, show.legend = FALSE) +
+  geom_text(aes(label = Genome_ID, color = Genome_ID),size = 3, show.legend = FALSE) +
+  scale_color_manual(values = c("Halobellus limi" = "coral", "Halobellus salinus" = "darkgoldenrod4", "Limimonas halophila" = "darkolivegreen3", "Piscibacillus salipiscarius JCM_13188" = "aquamarine3", "Salinibacter altiplanensist" = "violet", "Salinibacter ruber DSM_13855" = "cyan3", "Salinicola salarius" = "deeppink")) +
+  theme_minimal() +
+  xlab("Halophile reference genomes") +
+  ylab("Proteomic Glutamic Acid %")
+```
+
+
+#Using patchwork to combine plots to make final forms of Figure 3.2 
+
+```{r}
+
+#combine plots
+combined_proteome <- glu_halo_proteome + glu_fresh_proteome + asp_halo_proteome + asp_fresh_proteome
+
+combined_proteome + plot_layout(guides = "collect", ncol=2)
+
+```
+
+#Plots for Chapter 3, Figure 3.3
+
+```{r}
+#read in data file
+secretome_aa <- read.csv("SIGNALP/references_proteome_secretome.csv")
+
+#filter data
+filtered_data_secretome_fresh <- secretome_aa %>% filter(Genome.type == "Freshwater ref")
+
+filtered_data_secretome_halo <- secretome_aa %>% filter(Genome.type == "Halophile ref")
+
+
+## GLUTAMIC ACID PLOTS ##
+
+#Plot code
+glu_fresh_secretome <- ggplot(filtered_data_secretome_fresh, aes(x = Genome.type, y = Secretome_Glutamic_acid)) +
+  geom_boxplot() +
+  geom_point(aes(color = Genome_ID), size=1.5, show.legend = FALSE) +
+  geom_text(aes(label = Genome_ID, color = Genome_ID),size = 3, show.legend = FALSE) +
+  scale_color_manual(values = c("Aquiluna borgonia" = "darkred", "Cloacibacterium rupense" = "blue", "Flavobacterium dankookense" = "azure4", "Limnohabitans planktonicus" = "darkgoldenrod2", "Rhodoluna lacicola" = "darkorange1", "Sandarakinorhabdus limnophila DSM_17366" = "darkmagenta", "Silvanigrella aquatica" = "cornflowerblue")) +
+  theme_minimal() +
+  xlab("Freshwater reference genomes") +
+  ylab("Secretomic Glutamic Acid %")
+
+glu_halo_secretome <- ggplot(filtered_data_secretome_halo, aes(x = Genome.type, y = Secretome_Glutamic_acid)) +
+  geom_boxplot() +
+  geom_point(aes(color = Genome_ID), size=1.5, show.legend = FALSE) +
+  geom_text(aes(label = Genome_ID, color = Genome_ID),size = 3, show.legend = FALSE) +
+  scale_color_manual(values = c("Halobellus limi" = "coral", "Halobellus salinus" = "darkgoldenrod4", "Limimonas halophila" = "darkolivegreen3", "Piscibacillus salipiscarius JCM_13188" = "aquamarine3", "Salinibacteri altiplanensist" = "violet", "Salinibacter ruber DSM_13855" = "cyan3", "Salinicola salarius" = "deeppink")) +
+  theme_minimal() +
+  xlab("Halophile reference genomes") +
+  ylab("Secretomic Glutamic Acid %")
+
+## ASPARTIC ACID ##
+
+#plot code
+asp_fresh_secretome <- ggplot(filtered_data_secretome_fresh, aes(x = Genome.type, y = Secretome_Aspartic_acid)) +
+  geom_boxplot() +
+  geom_point(aes(color = Genome_ID), size=1.5, show.legend = FALSE) +
+  geom_text(aes(label = Genome_ID, color = Genome_ID),size = 3, show.legend = FALSE) +
+  scale_color_manual(values = c("Aquiluna borgonia" = "darkred", "Cloacibacterium rupense" = "blue", "Flavobacterium dankookense" = "azure4", "Limnohabitans planktonicus" = "darkgoldenrod2", "Rhodoluna lacicola" = "darkorange1", "Sandarakinorhabdus limnophila DSM_17366" = "darkmagenta", "Silvanigrella aquatica" = "cornflowerblue")) +
+  theme_minimal() +
+  xlab("Freshwater reference genomes") +
+  ylab("Secretomic Aspartic Acid %")
+
+asp_halo_secretome <- ggplot(filtered_data_secretome_halo, aes(x = Genome.type, y = Secretome_Aspartic_acid)) +
+  geom_boxplot() +
+  geom_point(aes(color = Genome_ID), size=1.5, show.legend = FALSE) +
+  geom_text(aes(label = Genome_ID, color = Genome_ID),size = 3, show.legend = FALSE) +
+  scale_color_manual(values = c("Halobellus limi" = "coral", "Halobellus salinus" = "darkgoldenrod4", "Limimonas halophila" = "darkolivegreen3", "Piscibacillus salipiscarius JCM_13188" = "aquamarine3", "Salinibacteri altiplanensist" = "violet", "Salinibacter ruber DSM_13855" = "cyan3", "Salinicola salarius" = "deeppink")) +
+  theme_minimal() +
+  xlab("Halophile reference genomes") +
+  ylab("Secretomic Aspartic Acid %")
+
+#Use patchwork to make final form of Figure 3.3
+combined_references <- glu_halo_secretome + glu_fresh_secretome + asp_halo_secretome + asp_fresh_secretome
+
+combined_references + plot_layout(guides = "collect", ncol=2)
+
+```
+

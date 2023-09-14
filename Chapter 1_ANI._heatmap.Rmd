@@ -1,0 +1,36 @@
+---
+title: "FastANI"
+author: "mram222"
+date: "2023-07-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+#R code for ANI heatmap (Chapter 2, Figure 2.8)
+
+#Download packages
+library("reshape2")
+library("gplots")
+
+### get data, convert to matrix
+y <- read.table("fastANI4.out")
+matrix <- acast(y, V1~V2, value.var="V3")
+matrix[is.na(matrix)] <- 70
+names(y$V1)
+
+### define the colors within 2 zones
+breaks = seq(min(matrix), max(100), length.out=100)
+gradient1 = colorpanel( sum( breaks[-1]<=95 ), "red", "white" )
+gradient2 = colorpanel( sum( breaks[-1]>95 & breaks[-1]<=100), "white", "blue" )
+
+hm.colors = c(gradient1, gradient2)
+
+#heatmap
+heatmap.2(matrix, scale = "none", dendrogram="none", trace = "none", col = hm.colors)
+
+```
+

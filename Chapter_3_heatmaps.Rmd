@@ -1,0 +1,52 @@
+---
+title: "AA_comp_heatmap"
+author: "mram222"
+date: "2023-05-17"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+HEATMP CODE USED CHAPTER 3
+```{r}
+#install packages
+library("RColorBrewer")
+library(gplots)
+library(dplyr)
+#change colour scale from default for heatmap colours
+col <- colorRampPalette(brewer.pal(10, "RdYlBu"))(256)
+
+##Heatmap for reference genomes (halophiles and obligate freshwater bacteria)
+
+#read data file
+ref_hp <- read.csv("AA_comp_all/halophile_freshwater_refs_overall_aa_comp/halophile_freshwater_ref_AAcomp_overall copy.csv")
+
+#make data frame to matrix
+ref_hp_matrix <- as.matrix(ref_hp[, -1])
+rownames(ref_hp_matrix) <- ref_hp$X #assign row names
+
+#plot code
+heatmap.2(ref_hp_matrix, revC=FALSE, scale="row",col=col, Rowv= FALSE, Colv=NA, dendrogram="none",trace="none", colsep = 1:ncol(ref_hp_matrix), rowsep = 1:nrow(ref_hp_matrix), sepwidth = c(0, 0), cexRow=0.6, cexCol=0.6, lwid=c(0.5,2.5), lhei=c(1.4,5), margins=c(12,8), key = TRUE, key.size=2, key.title=NA, density.info= "none")
+dev.off()
+
+##code for Ca. M. algeriense isolate heatmap
+
+#read in data file
+ref_hp_algeriense <- read.csv("AA_comp_all/algeriense_AA_comp_overall.csv")
+
+#make data fram to matrix
+ref_hp_matrix_algeriense <- as.matrix(ref_hp_algeriense[, -1])
+rownames(ref_hp_matrix_algeriense) <- ref_hp_algeriense$X #assign row names
+
+
+#change colour scale from default for heatmap colours
+library("RColorBrewer")
+col <- colorRampPalette(brewer.pal(10, "RdYlBu"))(256)
+
+#plot code
+heatmap.2(ref_hp_matrix_algeriense, revC=FALSE, scale="row",col=col, Rowv= FALSE, Colv=NA, dendrogram="none",trace="none", colsep = 1:ncol(ref_hp_matrix), rowsep = 1:nrow(ref_hp_matrix), sepwidth = c(0, 0), cexRow=0.6, cexCol=0.2, lwid=c(0.5,2.5), lhei=c(1.4,5), margins=c(12,8), key = TRUE, key.size=2, key.title=NA, density.info= "none")
+
+```
+
